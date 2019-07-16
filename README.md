@@ -1,5 +1,9 @@
 # philiprehberger-docstring-cli
 
+[![Tests](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml/badge.svg)](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml)
+[![PyPI version](https://img.shields.io/pypi/v/philiprehberger-docstring-cli.svg)](https://pypi.org/project/philiprehberger-docstring-cli/)
+[![License](https://img.shields.io/github/license/philiprehberger/py-docstring-cli)](LICENSE)
+
 Automatically generate CLI interfaces from function signatures and docstrings.
 
 ## Installation
