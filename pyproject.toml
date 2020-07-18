@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "philiprehberger-docstring-cli"
-version = "0.1.1"
+version = "0.1.2"
 description = "Automatically generate CLI interfaces from function signatures and docstrings"
 readme = "README.md"
 license = "MIT"
