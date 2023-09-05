@@ -3,6 +3,7 @@
 [![Tests](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml/badge.svg)](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml)
 [![PyPI version](https://img.shields.io/pypi/v/philiprehberger-docstring-cli.svg)](https://pypi.org/project/philiprehberger-docstring-cli/)
 [![License](https://img.shields.io/github/license/philiprehberger/py-docstring-cli)](LICENSE)
+[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
 
 Automatically generate CLI interfaces from function signatures and docstrings.
 
