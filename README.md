@@ -91,6 +91,14 @@ run(add, ["3", "4"])  # prints 7
 - Builds a parser from the function and parses the given `argv` (or `sys.argv[1:]`)
 - Does not require the `@cli` decorator
 
+
+## Development
+
+```bash
+pip install -e .
+python -m pytest tests/ -v
+```
+
 ## License
 
 MIT
