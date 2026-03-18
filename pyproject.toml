@@ -24,9 +24,10 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/philiprehberger/py-docstring-cli"
+Homepage = "https://github.com/philiprehberger/py-docstring-cli#readme"
 Repository = "https://github.com/philiprehberger/py-docstring-cli"
 Issues = "https://github.com/philiprehberger/py-docstring-cli/issues"
+Changelog = "https://github.com/philiprehberger/py-docstring-cli/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/philiprehberger_docstring_cli"]
