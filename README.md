@@ -2,8 +2,7 @@
 
 [![Tests](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml/badge.svg)](https://github.com/philiprehberger/py-docstring-cli/actions/workflows/publish.yml)
 [![PyPI version](https://img.shields.io/pypi/v/philiprehberger-docstring-cli.svg)](https://pypi.org/project/philiprehberger-docstring-cli/)
-[![License](https://img.shields.io/github/license/philiprehberger/py-docstring-cli)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ec6cb9)](https://github.com/sponsors/philiprehberger)
+[![Last updated](https://img.shields.io/github/last-commit/philiprehberger/py-docstring-cli)](https://github.com/philiprehberger/py-docstring-cli/commits/main)
 
 Automatically generate CLI interfaces from function signatures and docstrings.
 
@@ -20,7 +19,6 @@ pip install philiprehberger-docstring-cli
 ```python
 from philiprehberger_docstring_cli import cli
 
-
 @cli
 def greet(name: str, count: int = 1, loud: bool = False):
     """Greet someone by name.
@@ -35,7 +33,6 @@ def greet(name: str, count: int = 1, loud: bool = False):
         greeting = greeting.upper()
     for _ in range(count):
         print(greeting)
-
 
 # Call from CLI: python greet.py Alice --count 3 --loud
 # Or call normally: greet("Alice", count=3, loud=True)
@@ -57,7 +54,6 @@ For one-off usage without decorating:
 ```python
 from philiprehberger_docstring_cli import run
 
-
 def add(a: int, b: int):
     """Add two numbers.
 
@@ -66,7 +62,6 @@ def add(a: int, b: int):
         b: Second number.
     """
     return a + b
-
 
 run(add, ["3", "4"])  # prints 7
 ```
@@ -92,7 +87,6 @@ run(add, ["3", "4"])  # prints 7
 - Builds a parser from the function and parses the given `argv` (or `sys.argv[1:]`)
 - Does not require the `@cli` decorator
 
-
 ## Development
 
 ```bash
@@ -100,6 +94,24 @@ pip install -e .
 python -m pytest tests/ -v
 ```
 
+## Support
+
+If you find this project useful:
+
+⭐ [Star the repo](https://github.com/philiprehberger/py-docstring-cli)
+
+🐛 [Report issues](https://github.com/philiprehberger/py-docstring-cli/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
+
+💡 [Suggest features](https://github.com/philiprehberger/py-docstring-cli/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement)
+
+❤️ [Sponsor development](https://github.com/sponsors/philiprehberger)
+
+🌐 [All Open Source Projects](https://philiprehberger.com/open-source-packages)
+
+💻 [GitHub Profile](https://github.com/philiprehberger)
+
+🔗 [LinkedIn Profile](https://www.linkedin.com/in/philiprehberger)
+
 ## License
 
-MIT
+[MIT](LICENSE)
