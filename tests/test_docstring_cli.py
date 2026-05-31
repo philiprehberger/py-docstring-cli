@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from philiprehberger_docstring_cli import cli, run
+from philiprehberger_docstring_cli import cli, command_info, run
 
 
 def test_positional_args_parsed() -> None:
@@ -153,3 +153,99 @@ def test_cli_with_explicit_argv() -> None:
 
     result = echo.cli(argv=["world", "--times", "2"])
     assert result == "world world"
+
+
+def test_command_info_basic_shape() -> None:
+    @cli
+    def greet(name: str, count: int = 1) -> str:
+        """Greet someone by name.
+
+        Args:
+            name: The person to greet.
+            count: Number of times to greet.
+        """
+        return name
+
+    info = command_info(greet)
+    assert info["name"] == "greet"
+    assert info["description"] == "Greet someone by name."
+    assert len(info["params"]) == 2
+    for param in info["params"]:
+        assert set(param.keys()) == {"name", "type", "default", "required", "help"}
+
+
+def test_command_info_param_with_default_not_required() -> None:
+    @cli
+    def repeat(word: str, count: int = 3) -> str:
+        """Repeat a word.
+
+        Args:
+            word: The word to repeat.
+            count: How many times.
+        """
+        return word
+
+    info = command_info(repeat)
+    count_param = next(p for p in info["params"] if p["name"] == "count")
+    assert count_param["required"] is False
+    assert count_param["default"] == 3
+    assert count_param["type"] == "int"
+    assert count_param["help"] == "How many times."
+
+
+def test_command_info_param_without_default_required() -> None:
+    @cli
+    def greet(name: str) -> str:
+        """Greet someone.
+
+        Args:
+            name: The person to greet.
+        """
+        return name
+
+    info = command_info(greet)
+    name_param = next(p for p in info["params"] if p["name"] == "name")
+    assert name_param["required"] is True
+    assert name_param["default"] is None
+    assert name_param["type"] == "str"
+    assert name_param["help"] == "The person to greet."
+
+
+def test_command_info_on_undecorated_function() -> None:
+    def add(a: int, b: int) -> int:
+        """Add two numbers.
+
+        Args:
+            a: First number.
+            b: Second number.
+        """
+        return a + b
+
+    info = command_info(add)
+    assert info["name"] == "add"
+    assert info["description"] == "Add two numbers."
+    assert len(info["params"]) == 2
+
+
+def test_run_with_version_flag_exits_zero(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    def add(a: int, b: int) -> int:
+        """Add two numbers."""
+        return a + b
+
+    with pytest.raises(SystemExit) as exc_info:
+        run(add, ["--version"], version="1.2.3")
+    assert exc_info.value.code == 0
+    captured = capsys.readouterr()
+    assert "1.2.3" in captured.out + captured.err
+
+
+def test_run_without_version_rejects_version_flag() -> None:
+    def add(a: int, b: int) -> int:
+        """Add two numbers."""
+        return a + b
+
+    with pytest.raises(SystemExit) as exc_info:
+        run(add, ["--version"])
+    assert exc_info.value.code != 0

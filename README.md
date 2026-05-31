@@ -66,12 +66,58 @@ def add(a: int, b: int):
 run(add, ["3", "4"])  # prints 7
 ```
 
+### Adding `--version`
+
+Pass `version="..."` to `run()` to enable a built-in `--version` flag:
+
+```python
+from philiprehberger_docstring_cli import run
+
+def add(a: int, b: int):
+    """Add two numbers."""
+    return a + b
+
+run(add, version="1.0.0")
+# Invoking with --version prints "1.0.0" and exits.
+```
+
+### Introspecting commands
+
+Use `command_info(fn)` to inspect a `@cli`-decorated (or plain) function
+without invoking it. Useful for building help screens, completion data,
+or programmatic command listings.
+
+```python
+from philiprehberger_docstring_cli import cli, command_info
+
+@cli
+def greet(name: str, count: int = 1):
+    """Greet someone by name.
+
+    Args:
+        name: The person to greet.
+        count: Number of times to greet.
+    """
+    ...
+
+info = command_info(greet)
+# {
+#   "name": "greet",
+#   "description": "Greet someone by name.",
+#   "params": [
+#     {"name": "name",  "type": "str", "default": None, "required": True,  "help": "The person to greet."},
+#     {"name": "count", "type": "int", "default": 1,    "required": False, "help": "Number of times to greet."},
+#   ],
+# }
+```
+
 ## API
 
-| Name   | Description                                               |
-| ------ | --------------------------------------------------------- |
-| `cli`  | Decorator that makes a function callable from the CLI.    |
-| `run`  | Run any function as a CLI command without decorating it.  |
+| Name            | Description                                               |
+| --------------- | --------------------------------------------------------- |
+| `cli`           | Decorator that makes a function callable from the CLI.    |
+| `run`           | Run any function as a CLI command without decorating it.  |
+| `command_info`  | Introspect a function and return its CLI metadata.        |
 
 ### `@cli`
 
@@ -82,10 +128,17 @@ run(add, ["3", "4"])  # prints 7
 - Underscore parameter names are converted to hyphenated flags (`dry_run` -> `--dry-run`)
 - Google-style docstring `Args:` sections are used for help text
 
-### `run(func, argv=None)`
+### `run(func, argv=None, *, version=None)`
 
 - Builds a parser from the function and parses the given `argv` (or `sys.argv[1:]`)
 - Does not require the `@cli` decorator
+- `version`: when set, the parser accepts `--version` and prints this string
+
+### `command_info(func)`
+
+- Returns a dict with `name`, `description`, and `params`
+- Each entry in `params` is a dict with `name`, `type`, `default`, `required`, and `help`
+- Works on `@cli`-decorated functions as well as plain functions
 
 ## Development
 

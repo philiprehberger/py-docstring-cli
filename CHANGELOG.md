@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0 (2026-05-30)
+
+- Add `version` parameter to `run()` that enables a `--version` flag
+- Add `command_info(fn)` for introspecting @cli-decorated functions
+
 ## 0.1.6 (2026-03-31)
 
 - Standardize README to 3-badge format with emoji Support section

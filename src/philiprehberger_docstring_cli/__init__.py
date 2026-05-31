@@ -8,7 +8,7 @@ import sys
 from collections.abc import Callable
 from typing import Any, get_type_hints
 
-__all__ = ["cli", "run"]
+__all__ = ["cli", "command_info", "run"]
 
 
 def cli(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -40,15 +40,83 @@ def cli(func: Callable[..., Any]) -> Callable[..., Any]:
     return wrapper
 
 
-def run(func: Callable[..., Any], argv: list[str] | None = None) -> Any:
+def run(
+    func: Callable[..., Any],
+    argv: list[str] | None = None,
+    *,
+    version: str | None = None,
+) -> Any:
     """Run a function as a CLI command.
 
     Args:
         func: Function to run. Does not need the @cli decorator.
         argv: Command-line arguments. Defaults to sys.argv[1:].
+        version: When set, the parser accepts --version and prints this string.
     """
     parser = _build_parser(func)
+    if version is not None:
+        parser.add_argument("--version", action="version", version=version)
     return _run_parser(func, parser, argv)
+
+
+def command_info(func: Callable[..., Any]) -> dict[str, Any]:
+    """Introspect a @cli-decorated function.
+
+    Args:
+        func: A @cli-decorated function (or any function with type hints
+            and a docstring).
+
+    Returns:
+        Dict with keys:
+          - "name": function name
+          - "description": parsed docstring summary
+          - "params": list of dicts, each with
+              "name", "type", "default", "required", "help"
+    """
+    target = getattr(func, "__wrapped__", func)
+    sig = inspect.signature(target)
+    doc = inspect.getdoc(target) or ""
+    description = doc.split("\n")[0].strip() if doc else ""
+
+    try:
+        hints = get_type_hints(target)
+    except Exception:
+        hints = {}
+
+    param_docs = _parse_param_docs(doc)
+
+    params: list[dict[str, Any]] = []
+    for name, param in sig.parameters.items():
+        hint = hints.get(name)
+        if hint is None:
+            type_name = ""
+        elif isinstance(hint, type):
+            type_name = hint.__name__
+        else:
+            type_name = str(hint)
+
+        if param.default is inspect.Parameter.empty:
+            default: Any = None
+            required = True
+        else:
+            default = param.default
+            required = False
+
+        params.append(
+            {
+                "name": name,
+                "type": type_name,
+                "default": default,
+                "required": required,
+                "help": param_docs.get(name, ""),
+            }
+        )
+
+    return {
+        "name": target.__name__,
+        "description": description,
+        "params": params,
+    }
 
 
 def _build_parser(func: Callable[..., Any]) -> argparse.ArgumentParser:
